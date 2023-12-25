@@ -24,14 +24,35 @@ fn main() {
 }
 
 fn get_line_value(line: &str) -> u32 {
+    // Using 'a' as an invalid value placeholder.
     let mut first: char = 'a';
     let mut second: char = 'a';
 
-    for c in line.chars() {
-        if c.is_numeric() {
-            second = c;
+    for (index, possible_digit) in line.chars().enumerate() {
+        if possible_digit.is_digit(10) {
+            second = possible_digit;
             if first == 'a' {
-                first = c;
+                first = possible_digit;
+            }
+            continue;
+        }
+        let str_as_digit = match &line[index..line.len()] {
+            l if l.starts_with("one") => '1',
+            l if l.starts_with("two") => '2',
+            l if l.starts_with("three") => '3',
+            l if l.starts_with("four") => '4',
+            l if l.starts_with("five") => '5',
+            l if l.starts_with("six") => '6',
+            l if l.starts_with("seven") => '7',
+            l if l.starts_with("eight") => '8',
+            l if l.starts_with("nine") => '9',
+            _ => 'a'
+        };
+
+        if str_as_digit.is_digit(10) {
+            second = str_as_digit;
+            if first == 'a' {
+                first = str_as_digit;
             }
         }
     }
@@ -66,5 +87,50 @@ mod test {
     #[test]
     fn only_finds_the_first_and_last_digit_if_more_than_2_exist() {
         assert_eq!(get_line_value("abc2def3ghi4"), 24);
+    }
+
+    #[test]
+    fn should_use_one_written_out_as_a_digit() {
+        assert_eq!(get_line_value("abconedef"), 11);
+    }
+
+    #[test]
+    fn should_use_two_written_out_as_a_digit() {
+        assert_eq!(get_line_value("abctwodef"), 22);
+    }
+
+    #[test]
+    fn should_use_three_written_out_as_a_digit() {
+        assert_eq!(get_line_value("abcthreedef"), 33);
+    }
+
+    #[test]
+    fn should_use_four_written_out_as_a_digit() {
+        assert_eq!(get_line_value("abcfourdef"), 44);
+    }
+
+    #[test]
+    fn should_use_five_written_out_as_a_digit() {
+        assert_eq!(get_line_value("abcfivedef"), 55);
+    }
+
+    #[test]
+    fn should_use_six_written_out_as_a_digit() {
+        assert_eq!(get_line_value("abcsixdef"), 66);
+    }
+
+    #[test]
+    fn should_use_seven_written_out_as_a_digit() {
+        assert_eq!(get_line_value("abcsevendef"), 77);
+    }
+
+    #[test]
+    fn should_use_eight_written_out_as_a_digit() {
+        assert_eq!(get_line_value("abceightdef"), 88);
+    }
+
+    #[test]
+    fn should_use_nine_written_out_as_a_digit() {
+        assert_eq!(get_line_value("abcninedef"), 99);
     }
 }
