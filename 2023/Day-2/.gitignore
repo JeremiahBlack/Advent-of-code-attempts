@@ -1,0 +1,5 @@
+# For inputs from prompt.
+input_*.txt
+
+# For testing files.
+test_*.txt
